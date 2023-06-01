@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 type (
 	// Configuration struct
@@ -27,17 +30,17 @@ func Set() *Configuration {
 
 	userDB := os.Getenv("USER_DB")
 	if userDB == "" {
-		userDB = "pub-sub"
+		userDB = "admin"
 	}
 
 	pswDB := os.Getenv("PSW_DB")
 	if pswDB == "" {
-		pswDB = "qwerty"
+		pswDB = "password"
 	}
 
 	nameDB := os.Getenv("NAME_DB")
 	if nameDB == "" {
-		nameDB = "pub-sub"
+		nameDB = "chartDB"
 	}
 
 	ssldb := os.Getenv("SSLDB")
@@ -45,7 +48,7 @@ func Set() *Configuration {
 		ssldb = "disable"
 	}
 
-	connStr := "host=" + hostDB + " port=" + portDB + " user=" + userDB + " password=" + pswDB + " dbname=" + nameDB + " sslmode=" + ssldb
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", hostDB, portDB, userDB, pswDB, nameDB, ssldb)
 
 	return &Configuration{ConfigDB{ConnString: connStr}}
 }
