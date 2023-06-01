@@ -8,7 +8,7 @@ import (
 type (
 	// Configuration struct
 	Configuration struct {
-		ConfigDB
+		ConfigDB ConfigDB
 	}
 
 	// DB Config
@@ -18,6 +18,14 @@ type (
 )
 
 func Set() *Configuration {
+	cfgDB := setDB()
+
+	return &Configuration{
+		ConfigDB: cfgDB,
+	}
+}
+
+func setDB() ConfigDB {
 	hostDB := os.Getenv("HOST_DB")
 	if hostDB == "" {
 		hostDB = "localhost"
@@ -50,5 +58,5 @@ func Set() *Configuration {
 
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", hostDB, portDB, userDB, pswDB, nameDB, ssldb)
 
-	return &Configuration{ConfigDB{ConnString: connStr}}
+	return ConfigDB{ConnString: connStr}
 }

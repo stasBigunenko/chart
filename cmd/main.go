@@ -1,20 +1,35 @@
 package main
 
 import (
-	"chart/internal/config"
-	"chart/storage"
-	"fmt"
+	"chart/pkg/app"
+	"context"
 	"log"
+	"os"
+	"os/signal"
 )
 
 func main() {
-	config := config.Set()
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	ctx := context.Background()
 
-	s, err := storage.New(config.ConfigDB)
+	// read config
+	application, err := app.Create()
 	if err != nil {
-		log.Fatalf("Couldn't connect db: %s\n", err)
+		log.Fatalf("app create internal problem: %v\n", err)
+		os.Exit(1)
 	}
 
-	fmt.Printf("%s", s.GetDB())
+	// create shutdown
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		oscall := <-c
+		log.Printf("system call:%+v", oscall)
+		cancel()
+	}()
+
+	if err = application.Run(ctx); err != nil {
+		log.Fatal("Problems with server run: ", err)
+	}
 
 }
