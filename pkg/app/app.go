@@ -2,6 +2,7 @@ package app
 
 import (
 	"chart/internal/config"
+	"chart/internal/repository"
 	"chart/storage"
 	"context"
 	"log"
@@ -15,10 +16,12 @@ type Application struct {
 func Create() (*Application, error) {
 	cfg := config.Set()
 
-	_, err := storage.New(cfg.ConfigDB)
+	db, err := storage.New(cfg.ConfigDB)
 	if err != nil {
 		log.Fatalf("Couldn't connect to the db: %s\n", err)
 	}
+
+	repo := repository.New(db.GetDB())
 
 	return &Application{
 		configuration: cfg,
