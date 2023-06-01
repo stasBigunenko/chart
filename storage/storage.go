@@ -27,3 +27,7 @@ func New(connStr config.ConfigDB) (*Storage, error) {
 func (s *Storage) GetDB() *sql.DB {
 	return s.db
 }
+
+func (s *Storage) Close() {
+	s.db.Close()
+}
