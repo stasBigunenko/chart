@@ -4,7 +4,7 @@ import (
 	"chart/internal/models"
 	"chart/internal/service"
 	"context"
-	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -26,32 +26,37 @@ func (h *handler) CreateUser(c *gin.Context) {
 	var input models.CreateUserReq
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": errors.New("Wrong data")})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err := h.Service.CreateUser(context.Background(), &input)
+	fmt.Println(input)
+
+	res, err := h.Service.CreateUser(context.Background(), &input)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": errors.New("service error")})
+		fmt.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	fmt.Println(input)
+
+	c.JSON(http.StatusOK, gin.H{"user": res})
 }
 
 func (h *handler) LoginUser(c *gin.Context) {
 	var input models.LoginUserReq
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": errors.New("Wrong data")})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, err := h.Service.LoginUser(context.Background(), &input)
+	res, err := h.Service.LoginUser(context.Background(), &input)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": errors.New("service error")})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	c.JSON(http.StatusOK, gin.H{"user": res})
 }

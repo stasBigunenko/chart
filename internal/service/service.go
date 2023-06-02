@@ -46,14 +46,9 @@ func (s *service) CreateUser(ctx context.Context, userReq *models.CreateUserReq)
 }
 
 func (s *service) LoginUser(ctx context.Context, loginUser *models.LoginUserReq) (*models.LoginUserRes, error) {
-	u := models.User{
-		Email:    loginUser.Email,
-		Password: loginUser.Password,
-	}
-
-	user, err := s.Repository.GetUser(ctx, &u)
+	user, err := s.Repository.GetUser(ctx, loginUser.Email)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Wrong data")
 	}
 
 	if util.CheckPsw(user.Password, loginUser.Password) != nil {
