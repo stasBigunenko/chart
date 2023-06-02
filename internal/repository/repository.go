@@ -10,14 +10,17 @@ import (
 	"sync"
 )
 
-const cost = 8
+type Repository interface {
+	CreateUser(context.Context, *models.User) (*models.User, error)
+	GetUser(context.Context, *models.User) (*models.User, error)
+}
 
 type repository struct {
 	db *sql.DB
 	mu sync.Mutex
 }
 
-func New(db *sql.DB) models.Repository {
+func New(db *sql.DB) Repository {
 	return &repository{db: db}
 }
 

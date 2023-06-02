@@ -2,16 +2,22 @@ package service
 
 import (
 	"chart/internal/models"
+	"chart/internal/repository"
 	"chart/util"
 	"context"
 	"errors"
 )
 
-type service struct {
-	models.Repository
+type Service interface {
+	CreateUser(context.Context, *models.CreateUserReq) (*models.CreateUserRes, error)
+	LoginUser(context.Context, *models.LoginUserReq) (*models.LoginUserRes, error)
 }
 
-func New(r models.Repository) models.Service {
+type service struct {
+	repository.Repository
+}
+
+func New(r repository.Repository) Service {
 	return &service{r}
 }
 

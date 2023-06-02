@@ -8,7 +8,13 @@ import (
 type (
 	// Configuration struct
 	Configuration struct {
-		ConfigDB ConfigDB
+		HTTPServer HTTPServerConfiguration
+		ConfigDB   ConfigDB
+	}
+
+	// HTTP server port
+	HTTPServerConfiguration struct {
+		Port string
 	}
 
 	// DB Config
@@ -18,11 +24,22 @@ type (
 )
 
 func Set() *Configuration {
+	httpServerConf := setHTTP()
 	cfgDB := setDB()
 
 	return &Configuration{
-		ConfigDB: cfgDB,
+		HTTPServer: httpServerConf,
+		ConfigDB:   cfgDB,
 	}
+}
+
+func setHTTP() HTTPServerConfiguration {
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		httpPort = ":8080"
+	}
+
+	return HTTPServerConfiguration{Port: httpPort}
 }
 
 func setDB() ConfigDB {
