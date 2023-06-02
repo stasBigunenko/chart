@@ -12,6 +12,9 @@ import (
 type Handler interface {
 	CreateUser(c *gin.Context)
 	LoginUser(c *gin.Context)
+	Logout(c *gin.Context)
+	Welcome(c *gin.Context)
+	VerifyUser() gin.HandlerFunc
 }
 
 type handler struct {
@@ -58,5 +61,21 @@ func (h *handler) LoginUser(c *gin.Context) {
 		return
 	}
 
+	token, err := h.generateTokenStringForUser(res.ID, res.Name)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.SetCookie("chartJWT", token, 60*60*24, "/", "localhost", false, true)
 	c.JSON(http.StatusOK, gin.H{"user": res})
+}
+
+func (h *handler) Logout(c *gin.Context) {
+	c.SetCookie("chartJWT", "", -1, "", "", false, true)
+	c.JSON(http.StatusOK, gin.H{"message": "logout successful"})
+}
+
+func (h *handler) Welcome(c *gin.Context) {
+	c.JSON(http.StatusOK, "welcome user")
 }

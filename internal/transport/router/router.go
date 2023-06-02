@@ -58,6 +58,9 @@ func (r *router) RunServer(ctx context.Context) {
 
 // AssignRoutes assign the available routes of the HTTP API
 func (r *router) assignRoutes(engine *gin.Engine) {
+	engine.Use(r.handler.VerifyUser())
 	engine.POST("/signup", r.handler.CreateUser)
-	engine.POST("/login", r.handler.LoginUser)
+	engine.POST("/signin", r.handler.LoginUser)
+	engine.GET("/welcome", r.handler.Welcome)
+	engine.GET("/logout", r.handler.Logout)
 }

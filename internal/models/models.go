@@ -1,5 +1,7 @@
 package models
 
+import "github.com/golang-jwt/jwt/v4"
+
 type User struct {
 	ID       string `json:"id" db:"id""`
 	Name     string `json:"name" db:"name"`
@@ -28,4 +30,10 @@ type LoginUserRes struct {
 	accessToken string
 	ID          string `json:"id"`
 	Name        string `json:"name"`
+}
+
+type Claims struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	jwt.RegisteredClaims
 }

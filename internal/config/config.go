@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+const SECRETKEY = "password"
+
 type (
 	// Configuration struct
 	Configuration struct {

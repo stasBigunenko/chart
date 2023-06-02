@@ -68,7 +68,6 @@ func (s *service) LoginUser(ctx context.Context, loginUser *models.LoginUserReq)
 
 func (s *service) userExist(ctx context.Context, email string) bool {
 	u, _ := s.Repository.GetUser(ctx, email)
-
 	if u != nil {
 		return true
 	}
