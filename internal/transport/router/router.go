@@ -2,7 +2,7 @@ package router
 
 import (
 	"chart/internal/config"
-	"chart/internal/transport/handler"
+	"chart/internal/transport/http/handler"
 	"context"
 	"github.com/gin-gonic/gin"
 	"log"

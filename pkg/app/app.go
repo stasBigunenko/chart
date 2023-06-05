@@ -4,7 +4,7 @@ import (
 	"chart/internal/config"
 	"chart/internal/repository"
 	"chart/internal/service"
-	"chart/internal/transport/handler"
+	"chart/internal/transport/http/handler"
 	"chart/internal/transport/router"
 	"chart/storage"
 	"context"
