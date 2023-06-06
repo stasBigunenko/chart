@@ -3,6 +3,7 @@ package router
 import (
 	"chart/internal/config"
 	"chart/internal/transport/http/handler"
+	"chart/internal/transport/ws"
 	"context"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -17,12 +18,14 @@ type Router interface {
 type router struct {
 	serverPort *config.HTTPServerConfiguration
 	handler    handler.Handler
+	wsHandler  *ws.Handler
 }
 
-func New(s *config.HTTPServerConfiguration, h handler.Handler) Router {
+func New(s *config.HTTPServerConfiguration, h handler.Handler, ws *ws.Handler) Router {
 	return &router{
 		serverPort: s,
 		handler:    h,
+		wsHandler:  ws,
 	}
 }
 
@@ -63,4 +66,6 @@ func (r *router) assignRoutes(engine *gin.Engine) {
 	engine.POST("/signin", r.handler.LoginUser)
 	engine.GET("/welcome", r.handler.Welcome)
 	engine.GET("/logout", r.handler.Logout)
+
+	engine.POST("/ws/createRoom", r.wsHandler.CreateRoom)
 }
