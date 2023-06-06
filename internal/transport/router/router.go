@@ -68,4 +68,5 @@ func (r *router) assignRoutes(engine *gin.Engine) {
 	engine.GET("/logout", r.handler.Logout)
 
 	engine.POST("/ws/createRoom", r.wsHandler.CreateRoom)
+	engine.GET("/ws/joinRoom/:roomId", r.wsHandler.JoinRoom)
 }
