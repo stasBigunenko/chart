@@ -1,5 +1,9 @@
 package ws
 
+import (
+	"context"
+)
+
 type Room struct {
 	ID      string             `json:"id"`
 	Name    string             `json:"name"`
@@ -22,7 +26,7 @@ func NewHub() *Hub {
 	}
 }
 
-func (h *Hub) Run() {
+func (h *Hub) Run(ctx context.Context) {
 	for {
 		select {
 		case cl := <-h.Register:

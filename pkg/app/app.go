@@ -40,7 +40,7 @@ func Create() (*Application, error) {
 }
 
 func (a *Application) Run(ctx context.Context) error {
+	go a.wsHub.Run(ctx)
 	router.New(&a.configuration.HTTPServer, handler.New(a.service), ws.NewHandler(a.wsHub)).RunServer(ctx)
-	a.wsHub.Run()
 	return nil
 }

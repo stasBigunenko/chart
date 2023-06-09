@@ -42,8 +42,6 @@ func (h *handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(input)
-
 	c.JSON(http.StatusOK, gin.H{"user": res})
 }
 
@@ -77,5 +75,6 @@ func (h *handler) Logout(c *gin.Context) {
 }
 
 func (h *handler) Welcome(c *gin.Context) {
-	c.JSON(http.StatusOK, "welcome user")
+	claims := c.Request.Context().Value("jwt").(models.Claims)
+	c.JSON(http.StatusOK, claims)
 }

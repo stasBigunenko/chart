@@ -3,7 +3,6 @@ package handler
 import (
 	"chart/internal/config"
 	"chart/internal/models"
-	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -25,17 +24,19 @@ func (h *handler) VerifyUser() gin.HandlerFunc {
 
 		token, err := c.Cookie("chartJWT")
 		if err != nil {
-			c.Redirect(http.StatusPermanentRedirect, "http://localhost:8080/signin")
+			c.JSON(http.StatusForbidden, gin.H{"error": "unauthorized"})
+			c.Abort()
+			return
 		}
 
 		claims, ok := validateToken(token)
 		if !ok {
 			c.JSON(http.StatusBadRequest, gin.H{"error": errors.New("invalid token")})
+			c.Abort()
 			return
 		}
 
-		c.Request.WithContext(context.WithValue(c, "jwt", claims))
-
+		c.Set("jwt", *claims)
 		c.Next()
 	}
 }
