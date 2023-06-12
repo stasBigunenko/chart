@@ -7,12 +7,19 @@ import (
 	"net/http"
 )
 
-type Handler struct {
+type Handler interface {
+	CreateRoom(c *gin.Context)
+	JoinRoom(c *gin.Context)
+	GetClients(c *gin.Context)
+	GetRooms(c *gin.Context)
+}
+
+type handler struct {
 	hub *Hub
 }
 
-func NewHandler(h *Hub) *Handler {
-	return &Handler{hub: h}
+func NewHandler(h *Hub) Handler {
+	return &handler{hub: h}
 }
 
 type CreateRoomReq struct {
@@ -20,7 +27,7 @@ type CreateRoomReq struct {
 	Name string `json:"name"`
 }
 
-func (h *Handler) CreateRoom(c *gin.Context) {
+func (h *handler) CreateRoom(c *gin.Context) {
 	var req CreateRoomReq
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -46,7 +53,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (h *Handler) JoinRoom(c *gin.Context) {
+func (h *handler) JoinRoom(c *gin.Context) {
 	claims := c.MustGet("jwt").(models.Claims)
 	_, err := c.Cookie("chartJWT")
 	if err != nil {
@@ -90,7 +97,7 @@ type ClientRes struct {
 	Name string `json:"name"`
 }
 
-func (h *Handler) GetClients(c *gin.Context) {
+func (h *handler) GetClients(c *gin.Context) {
 	var clients []ClientRes
 	roomId := c.Param("roomId")
 
@@ -114,7 +121,7 @@ type RoomRes struct {
 	Name string `json:"name"`
 }
 
-func (h *Handler) GetRooms(c *gin.Context) {
+func (h *handler) GetRooms(c *gin.Context) {
 	rooms := make([]RoomRes, 0)
 
 	for _, r := range h.hub.Rooms {

@@ -18,10 +18,10 @@ type Router interface {
 type router struct {
 	serverPort *config.HTTPServerConfiguration
 	handler    handler.Handler
-	wsHandler  *ws.Handler
+	wsHandler  ws.Handler
 }
 
-func New(s *config.HTTPServerConfiguration, h handler.Handler, ws *ws.Handler) Router {
+func New(s *config.HTTPServerConfiguration, h handler.Handler, ws ws.Handler) Router {
 	return &router{
 		serverPort: s,
 		handler:    h,
