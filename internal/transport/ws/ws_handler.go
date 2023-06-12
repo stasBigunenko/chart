@@ -2,7 +2,6 @@ package ws
 
 import (
 	"chart/internal/models"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
@@ -51,7 +50,8 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 	claims := c.MustGet("jwt").(models.Claims)
 	_, err := c.Cookie("chartJWT")
 	if err != nil {
-		fmt.Printf("no cookie, error:%v\n", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
